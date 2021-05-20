@@ -8,21 +8,14 @@ Created on Wed Apr  7 17:44:33 2021
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-def extract_data()
-data = pd.read_csv('books.csv', error_bad_lines=(False))
+from 
 
-data.drop('bookID', axis=1, inplace=True)
-data.drop('isbn', axis=1, inplace=True)
-data.drop('isbn13', axis=1, inplace=True)
 
 # 'title', 'authors', 'average_rating', 'isbn', 'isbn13', 'language_code',
 # '  num_pages', 'ratings_count', 'text_reviews_count',
 # 'publication_date', 'publisher'
 
 plt.figure(figsize=(15, 10))
-data.dropna(0, inplace=True)
-data.replace(to_replace=('en-US', 'en-GB', 'en-CA'), value='eng', inplace=True)
-data.rename(columns={'  num_pages': 'num_pages'}, inplace=True)
 
 
 # 1 количество рецензий - название книги (ПЕРЕВЕРНУТЬ....)
