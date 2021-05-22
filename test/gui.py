@@ -46,5 +46,7 @@ with open('../data/new.csv') as f:
         language_code = row['language_code']
         tree.insert("", 0, values=(title, authors, average_rating,language_code))
 
+
+
 if __name__ == '__main__':
     root.mainloop()
