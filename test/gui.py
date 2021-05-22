@@ -35,13 +35,15 @@ def download():
             tree.insert("", 0, values=(title, authors, average_rating, language_code))
 def get():
     da = pd.read_csv('../data/new.csv')
-    label = Label(root,text = str(da.iloc[1,1]))
+    value = name.get()
+    value = value.split(',')
+    label = Label(root,text = str(da.iloc[int(value[0]),int(value[1])]))
     label.pack()
 
 root = Tk()
 root.title("Python - Import CSV File To Tkinter Table")
-width = 500
-height = 400
+width = 800
+height = 700
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x = (screen_width/2) - (width/2)
@@ -49,8 +51,8 @@ y = (screen_height/2) - (height/2)
 root.geometry("%dx%d+%d+%d" % (width, height, x, y))
 root.resizable(0, 0)
 
-
-
+name = Entry(root)
+name.pack()
 button = Button(root, text = 'Download',command = download)
 button.pack()
 
