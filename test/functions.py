@@ -70,6 +70,7 @@ piv1 = piv_tuple[0]
 piv2  = piv_tuple[1]
 piv3 = piv_tuple[2]
 
+
 plt.title("distribution")
 plt.hist(piv1['text_reviews_count'])
 plt.xlabel('mean text reviews count for each publisher')
