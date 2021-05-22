@@ -1,8 +1,26 @@
 from tkinter import *
 import tkinter.ttk as ttk
 import csv
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 import pandas as pd
-
+def make_plot():
+    da = pd.read_csv('../data/new.csv')
+    fig = Figure(figsize=(6, 6))
+    a = fig.add_subplot(111)
+    a.hist(da.average_rating)
+    canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas.get_tk_widget().pack()
+    canvas.draw()
+    # plt.title('distribution')
+    # plt.xlabel('average rating')
+    # plt.show()
+    # plt.gcf().canvas.draw()
+    # fig = plt.figure()
+    # canvas = FigureCanvasTkAgg(fig, master=root)
+    # canvas.get_tk_widget().pack()
+    # canvas.draw()
 def download():
     TableMargin = Frame(root, width=400)
     TableMargin.pack(side=TOP)
@@ -20,10 +38,10 @@ def download():
     tree.heading('language_code', text="language_code", anchor=W)
 
     tree.column('#0', stretch=NO, minwidth=0, width=0)
-    tree.column('#1', stretch=NO, minwidth=0, width=200)
-    tree.column('#2', stretch=NO, minwidth=0, width=200)
-    tree.column('#3', stretch=NO, minwidth=0, width=300)
-    tree.column('#4', stretch=NO, minwidth=0, width=300)
+    tree.column('#1', stretch=NO, minwidth=0, width=100)
+    tree.column('#2', stretch=NO, minwidth=0, width=100)
+    tree.column('#3', stretch=NO, minwidth=0, width=100)
+    tree.column('#4', stretch=NO, minwidth=0, width=100)
     tree.pack()
     with open('../data/new.csv') as f:
         reader = csv.DictReader(f, delimiter=',')
@@ -42,14 +60,14 @@ def get():
 
 root = Tk()
 root.title("Python - Import CSV File To Tkinter Table")
-width = 800
-height = 700
+width = 1500
+height = 800
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x = (screen_width/2) - (width/2)
 y = (screen_height/2) - (height/2)
 root.geometry("%dx%d+%d+%d" % (width, height, x, y))
-root.resizable(0, 0)
+
 
 name = Entry(root)
 name.pack()
@@ -58,6 +76,9 @@ button.pack()
 
 button1 = Button(root, text = 'get_info',command = get)
 button1.pack()
+
+button2 = Button(root, text ='make plot', command = make_plot)
+button2.pack()
 
 # name = Entry(roo)
 
