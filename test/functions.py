@@ -8,7 +8,6 @@ def make_plot(piv_data):
 
 def make_data(path):
     """
-
     :param path:
     :return: clean data that is ready for anylysis
     """
@@ -20,6 +19,8 @@ def make_data(path):
     data.replace(to_replace=('en-US', 'en-GB', 'en-CA'), value='eng', inplace=True)
     data.rename(columns={'  num_pages': 'num_pages'}, inplace=True)
     return data
+
+
 def add_year_column(data):
     """
     add coulumns represinting years and century
@@ -50,7 +51,9 @@ def save_normal_data(data):
 data = make_data(path)
 data = add_year_column(data)
 data = add_binary_column(data)
-
+data.to_csv('../data/clean.csv')
+new_data = data.iloc[:5,:4]
+new_data.to_csv('../data/new.csv')
 def make_pivot_table(data):
     """
     make pibot table
@@ -70,7 +73,7 @@ piv3 = piv_tuple[2]
 plt.title("distribution")
 plt.hist(piv1['text_reviews_count'])
 plt.xlabel('mean text reviews count for each publisher')
-plt.savefig('first.png')
+plt.savefig('../data/first.png')
 plt.show()
 
 
@@ -78,13 +81,13 @@ x_labels = piv1.index
 plt.title("average rating")
 plt.barh(x_labels,piv1['average_rating'])
 plt.xlabel('average rating')
-plt.savefig('second.png')
+plt.savefig('../data/second.png')
 plt.show()
 
 x_labels = piv1.index
 plt.title("num of pages")
 plt.barh(x_labels,piv1['num_pages'])
 plt.xlabel('average num_pages')
-plt.savefig('third.png')
+plt.savefig('../data/third.png')
 plt.show()
 
