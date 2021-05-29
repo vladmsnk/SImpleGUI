@@ -46,13 +46,13 @@ def save_normal_data(data):
     :param data:
     :return:
     """
-    data.to_csv('clean_data.csv')
+    data.to_csv('../clean_data.csv')
 
 data = make_data(path)
 data = add_year_column(data)
 data = add_binary_column(data)
 data.to_csv('../data/clean.csv')
-new_data = data.iloc[:3000,:4]
+new_data = data.iloc[:3000,:]
 new_data.to_csv('../data/new.csv')
 def make_pivot_table(data):
     """
