@@ -3,7 +3,9 @@ import tkinter.ttk as ttk
 from configs.config import gui_height,gui_width,table_columns,clean_data_path
 import pandas as pd
 import csv
+import numpy as np
 
+path = clean_data_path
 def download():
     scrollbarx = Scrollbar(frame3, orient=HORIZONTAL)
     scrollbary = Scrollbar(frame3, orient=VERTICAL)
@@ -22,7 +24,7 @@ def download():
     for i in range(1, 11):
         tree.column(f'#{i}', stretch=NO, minwidth=0, width=150)
     tree.pack()
-    with open(clean_data_path) as f:
+    with open(path) as f:
         reader = csv.DictReader(f, delimiter=',')
         for row in reader:
             title = row['title']
@@ -40,6 +42,90 @@ def download():
             title, authors, average_rating, language_code, num_pages, text_reviews_count, publication_date, publisher,
             pub_year, century))
 
+def check(av2,pag2,rate2,rew2):
+    result = (np.array([av2,pag2,rate2,rew2]) !=0)
+    return result
+def reload():
+    av1 = float(var_2.get())
+    av2 = float(var_3.get())
+    pag1 = int(var_4.get())
+    pag2 = int(var_5.get())
+    rate1 = float(var_6.get())
+    rate2 = float(var_7.get())
+    rew1 = int(var_8.get())
+    rew2 = int(var_9.get())
+
+    chk = check(av2,pag2,rate2,rew2)
+    newcsv = []
+    with open(clean_data_path) as f:
+        reader = csv.reader(f, delimiter=',', quotechar='|')
+        reader = list(reader)
+
+    with open('../data/reload.csv', 'w') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',')
+        if not newcsv:
+            newcsv.append(reader[0])
+            spamwriter.writerow(reader[0])
+            reader.pop(0)
+        for str in reader:
+            if all(chk) and av2 > float(str[3])  > av1 and pag2 > int(str[5])  > pag1 \
+                    and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+            elif all(chk[:3]) and not chk[-1] and av2 > float(str[3])  > av1 and pag2 > int(str[5])  > pag1 \
+                    and rate2 > int(str[6]) > rate1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif chk[0] and not chk[1] and all(chk[2:]) and av2 > float(str[3])  > av1 \
+                and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif chk[-1] and not chk[2] and all(chk[:2]) and av2 > float(str[3])  > av1 and pag2 > int(str[5])  > pag1 \
+                and rew2 > int(str[7]) > rew1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif all(chk[1:]) and not chk[0] and pag2 > int(str[5])  > pag1 \
+                    and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif all(chk[:2]) and not any(chk[2:]) and av2 > float(str[3]) > av1 and pag2 > int(str[5]) > pag1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif all(chk[2:]) and not any(chk[:2]) and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+            elif all(chk[1:3]) and not chk[0] and not chk[-1] and pag2 > int(str[5])  > pag1 and rate2 > int(str[6]) > rate1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+            elif chk[0] and chk[2] and not chk[1] and not chk[-1] and av2 > float(str[3])  > av1 and rate2 > int(str[6]) > rate1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif chk[1] and not chk[0] and not chk[3] and chk[-1] and pag2 > int(str[5])  > pag1 and rew2 > int(str[7]) > rew1:
+                newcsv.append(str)
+                spamwriter.writerow(str)
+
+            elif  (chk[0] and not any(chk[1:]) and av2 > float(str[3])  > av1) or (chk[1] and not chk[0] and not any(chk[2:]) and pag2 > int(str[5])  > pag1 ) or \
+                    (not any(chk[:2]) and chk[3] and not chk[-1] and rate2 > int(str[6]) > rate1) or (not any(chk[:3]) and chk[-1] and rew2 > int(str[7]) > rew1) :
+                newcsv.append(str)
+                spamwriter.writerow(str)
+def change_frame():
+    for widgets in frame3.winfo_children():
+        widgets.destroy()
+
+
+def update_table():
+    for widgets in frame3.winfo_children():
+        widgets.destroy()
+    global path
+    reload()
+    path = '../data/reload.csv'
+    download()
 
 
 
@@ -113,7 +199,11 @@ lbl_9.grid(row=4, column=4)
 sca_9= Scale(frame1,variable = var_9, orient=HORIZONTAL, length=150, from_=0, to=94300, tickinterval=94300, resolution=100)
 sca_9.set(94300)
 sca_9.grid(row=4, column=5)
-download()
+
+download_init_data_base = Button(frame1, text ='Скачать',command=download)
+download_init_data_base.grid(row=5, column=1)
+reload_data_base= Button(frame1, text='Обновить базу данных', command=update_table)
+reload_data_base.grid(row=5, column=2)
 
 
 
