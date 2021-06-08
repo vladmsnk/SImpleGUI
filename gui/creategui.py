@@ -1,11 +1,40 @@
 from tkinter import *
 import tkinter.ttk as ttk
 from configs.config import gui_height,gui_width,table_columns,clean_data_path
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import pandas as pd
 import csv
 import numpy as np
 
 path = clean_data_path
+tmp_columns = [
+    "Название", "Автор", "Средний", 'Язык', 'Количество', 'Количество рейтингов','Количество отзывов', 'Дата публикации',
+    'Издательство', 'Год публикации', 'Век публикации','Большая ли она']
+
+tmp_data = pd.read_csv('../data/clean_data.csv')
+
+
+def show():
+    if combo_plot1.get() != 'выберите':
+        for widgets in frame3.winfo_children():
+            widgets.destroy()
+        if combo_plot1.get() != combo_plot2.get():
+
+            figure = plt.Figure(figsize=(5,2))
+            ax = figure.add_subplot(111)
+            ax.scatter(tmp_data[combo_plot1.get()],tmp_data[combo_plot2.get()],s = 7)
+            ax.set_xlabel(combo_plot1.get())
+            ax.set_ylabel(combo_plot1.get())
+            # figure.set_figheight(3)
+
+
+
+            chart_type = FigureCanvasTkAgg(figure,frame3)
+            chart_type.get_tk_widget().place(x = 10, y =10)
+
+
+
 
 def download():
     scrollbarx = Scrollbar(frame3, orient=HORIZONTAL)
@@ -21,10 +50,10 @@ def download():
     scrollbarx.pack(side = BOTTOM, fill=X)
     for i in columns:
         tree.heading(f'{i}', text=f'{i}', anchor=W)
-    tree.column('#0', stretch=NO, minwidth=0, width=0)
-    tree.column("#0", minwidth=0, width=50)
-    for i in range(1, 11):
-        tree.column(f'#{i}', stretch=NO, minwidth=0, width=150)
+    # tree.column('#0', stretch=NO, minwidth=0, width=0)
+    tree.column("#0", minwidth=0, width=0)
+    for i in range(1, 12):
+        tree.column(f'#{i}', stretch=NO, minwidth=106, width=106)
 
     tree.pack()
     with open(path) as f:
@@ -76,54 +105,11 @@ def reload():
                     and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
                 newcsv.append(str)
                 spamwriter.writerow(str)
-
-            # if all(chk) and av2 > float(str[3])  > av1 and pag2 > int(str[5])  > pag1 \
-            #         and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            # elif all(chk[:3]) and not chk[-1] and av2 > float(str[3])  > av1 and pag2 > int(str[5])  > pag1 \
-            #         and rate2 > int(str[6]) > rate1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif chk[0] and not chk[1] and all(chk[2:]) and av2 > float(str[3])  > av1 \
-            #     and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif chk[-1] and not chk[2] and all(chk[:2]) and av2 > float(str[3])  > av1 and pag2 > int(str[5])  > pag1 \
-            #     and rew2 > int(str[7]) > rew1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif all(chk[1:]) and not chk[0] and pag2 > int(str[5])  > pag1 \
-            #         and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif all(chk[:2]) and not any(chk[2:]) and av2 > float(str[3]) > av1 and pag2 > int(str[5]) > pag1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif all(chk[2:]) and not any(chk[:2]) and rate2 > int(str[6]) > rate1 and rew2 > int(str[7]) > rew1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            # elif all(chk[1:3]) and not chk[0] and not chk[-1] and pag2 > int(str[5])  > pag1 and rate2 > int(str[6]) > rate1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            # elif chk[0] and chk[2] and not chk[1] and not chk[-1] and av2 > float(str[3])  > av1 and rate2 > int(str[6]) > rate1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif chk[1] and not chk[0] and not chk[3] and chk[-1] and pag2 > int(str[5])  > pag1 and rew2 > int(str[7]) > rew1:
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-            #
-            # elif  (chk[0] and not any(chk[1:]) and av2 > float(str[3])  > av1) or (chk[1] and not chk[0] and not any(chk[2:]) and pag2 > int(str[5])  > pag1 ) or \
-            #         (not any(chk[:2]) and chk[3] and not chk[-1] and rate2 > int(str[6]) > rate1) or (not any(chk[:3]) and chk[-1] and rew2 > int(str[7]) > rew1) :
-            #     newcsv.append(str)
-            #     spamwriter.writerow(str)
-
+    global tmp_data
+    tmp_data = pd.read_csv('../data/reload.csv')
+    # tmp_data.rename(columns=tmp_columns)
+    # print(tmp_columns)
+    # print(tmp_data.columns)
 def download_main():
     for widgets in frame3.winfo_children():
         widgets.destroy()
@@ -149,10 +135,12 @@ x = (screen_width / 2) - (gui_width / 2)
 y = (screen_height / 2) - (gui_height / 2)
 root.geometry("%dx%d+%d+%d" % (gui_width, gui_height, x, y))
 frame1 = Frame(root, width=600, height=350)
-frame2 = Frame(root, width=600, height=350)
-frame3 = Frame(root, width=1200, height=350)
+frame2 = Frame(root, width=600, height=100)
+frame22 = Frame(root, width=600, height=300)
+frame3 = Frame(root, width=1200, height=300)
 frame1.place(x = 10, y =10 )
 frame2.place(x = 610, y =10 )
+frame22.place(x = 610, y =110)
 frame3.place(x = 10, y = 360)
 
 
@@ -218,15 +206,19 @@ download_init_data_base.grid(row=5, column=1)
 reload_data_base= Button(frame1, text='Обновить базу данных', command=update_table)
 reload_data_base.grid(row=5, column=2)
 
-histograms = [ 'Средний рейтинг','Количествостраниц','Рейтинг','Отзывы']
-combo =ttk.Combobox(frame2,values = histograms)
-combo.place(x =0 , y = 30)
+values = ['Choose', 'average_rating','num_pages','ratings_count','text_reviews_count']
 
-#
-# menubar = Menu(root)
-# menubar.add_command(label="Say Hello", command=lambda: print("Hello"))
-# root.config(menu=menubar)
 
+combo_hist =ttk.Combobox(frame2,values = values)
+graph_label = Label(frame2, text ='График',font='bold')
+graph_label.place(x =0, y= 30)
+combo_plot1 = ttk.Combobox(frame2,values =values )
+combo_plot2 = ttk.Combobox(frame2,values =values )
+combo_plot1.place(x = 0, y = 60)
+combo_plot2.place(x = 200, y = 60)
+combo_plot1.current(0)
+combo_plot2.current(0)
+ttk.Button(frame2, text = 'PLOT' ,command =show).place(x = 60, y = 30)
 
 
 root.mainloop()
