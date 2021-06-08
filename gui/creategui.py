@@ -6,14 +6,15 @@ import csv
 import numpy as np
 
 path = clean_data_path
+
 def download():
     scrollbarx = Scrollbar(frame3, orient=HORIZONTAL)
     scrollbary = Scrollbar(frame3, orient=VERTICAL)
     columns = (
     "title", "authors", "average_rating", 'language_code', 'num_pages', 'ratings_count','text_reviews_count', 'publication_date',
     'publisher', 'pub_year', 'century')
-    tree = ttk.Treeview(frame3, columns=columns, selectmode="extended", yscrollcommand=scrollbary.set,
-                        xscrollcommand=scrollbarx.set)
+
+    tree = ttk.Treeview(frame3, columns=columns, selectmode="extended",height = 15)
     scrollbary.config(command=tree.yview)
     scrollbary.pack(side = RIGHT, fill=Y)
     scrollbarx.config(command=tree.xview)
@@ -21,8 +22,10 @@ def download():
     for i in columns:
         tree.heading(f'{i}', text=f'{i}', anchor=W)
     tree.column('#0', stretch=NO, minwidth=0, width=0)
+    tree.column("#0", minwidth=0, width=50)
     for i in range(1, 11):
         tree.column(f'#{i}', stretch=NO, minwidth=0, width=150)
+
     tree.pack()
     with open(path) as f:
         reader = csv.DictReader(f, delimiter=',')
@@ -46,6 +49,7 @@ def download():
 def check(av2,pag2,rate2,rew2):
     result = (np.array([av2,pag2,rate2,rew2]) !=0)
     return result
+
 def reload():
     av1 = float(var_2.get())
     av2 = float(var_3.get())
@@ -55,7 +59,6 @@ def reload():
     rate2 = float(var_7.get())
     rew1 = int(var_8.get())
     rew2 = int(var_9.get())
-
     chk = check(av2,pag2,rate2,rew2)
     newcsv = []
     with open(clean_data_path) as f:
@@ -145,21 +148,21 @@ screen_height = root.winfo_screenheight()
 x = (screen_width / 2) - (gui_width / 2)
 y = (screen_height / 2) - (gui_height / 2)
 root.geometry("%dx%d+%d+%d" % (gui_width, gui_height, x, y))
-frame1 = Frame(root, width=600, height=350 )
+frame1 = Frame(root, width=600, height=350)
 frame2 = Frame(root, width=600, height=350)
 frame3 = Frame(root, width=1200, height=350)
-frame1.grid(row=0, column=0, sticky="ns")
-frame2.grid(row=0, column=1)
-frame3.grid(row=1, column=0, columnspan=2, sticky="we")
+frame1.place(x = 10, y =10 )
+frame2.place(x = 610, y =10 )
+frame3.place(x = 10, y = 360)
 
 
 
 lbl_0 = Label(frame1, text='Отбор по базе данных')
 lbl_0.config(font=("Courier", 12))
-lbl_0.grid(row=0, column=3, columnspan=2, rowspan=1)
-lbl_1 = Label(frame1, text='Построение зависимостей')
+lbl_0.place( x =0, y = 0)
+lbl_1 = Label(frame2, text='Построение зависимостей')
 lbl_1.config(font=("Courier", 12))
-lbl_1.grid(row=0,column=9)
+lbl_1.place(x = 0 , y =0)
 var_2 = DoubleVar()
 var_3 = DoubleVar()
 var_4 = DoubleVar()
@@ -209,10 +212,20 @@ sca_9= Scale(frame1,variable = var_9, orient=HORIZONTAL, length=150, from_=0, to
 sca_9.set(94300)
 sca_9.grid(row=4, column=5)
 
+
 download_init_data_base = Button(frame1, text ='Скачать',command=download_main)
 download_init_data_base.grid(row=5, column=1)
 reload_data_base= Button(frame1, text='Обновить базу данных', command=update_table)
 reload_data_base.grid(row=5, column=2)
+
+histograms = [ 'Средний рейтинг','Количествостраниц','Рейтинг','Отзывы']
+combo =ttk.Combobox(frame2,values = histograms)
+combo.place(x =0 , y = 30)
+
+#
+# menubar = Menu(root)
+# menubar.add_command(label="Say Hello", command=lambda: print("Hello"))
+# root.config(menu=menubar)
 
 
 
