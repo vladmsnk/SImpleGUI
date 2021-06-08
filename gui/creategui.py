@@ -16,21 +16,22 @@ tmp_data = pd.read_csv('../data/clean_data.csv')
 
 
 def show():
-    if combo_plot1.get() != 'выберите':
-        for widgets in frame3.winfo_children():
+    if combo_plot1.get() != 'choose':
+        for widgets in frame22.winfo_children():
             widgets.destroy()
-        if combo_plot1.get() != combo_plot2.get():
-
+        if combo_plot1.get() != combo_plot2.get() and combo_plot1.get() != 'choose'and combo_plot2.get() != 'choose':
             figure = plt.Figure(figsize=(5,2))
             ax = figure.add_subplot(111)
             ax.scatter(tmp_data[combo_plot1.get()],tmp_data[combo_plot2.get()],s = 7)
-            ax.set_xlabel(combo_plot1.get())
-            ax.set_ylabel(combo_plot1.get())
-            # figure.set_figheight(3)
-
-
-
-            chart_type = FigureCanvasTkAgg(figure,frame3)
+            chart_type = FigureCanvasTkAgg(figure, frame22)
+            chart_type.get_tk_widget().place(x=10, y=10)
+            # ax.set_xlabel(combo_plot1.get())
+            # ax.set_ylabel(combo_plot1.get())
+        elif combo_plot1.get() != 'choose'and combo_plot2.get() != 'choose' and combo_plot1.get() == combo_plot2.get():
+            figure = plt.Figure(figsize=(5, 2))
+            ax = figure.add_subplot(111)
+            ax.hist(tmp_data[combo_plot1.get()])
+            chart_type = FigureCanvasTkAgg(figure,frame22)
             chart_type.get_tk_widget().place(x = 10, y =10)
 
 
