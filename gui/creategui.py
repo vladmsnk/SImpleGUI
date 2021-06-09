@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from configs.config import gui_height,gui_width,table_columns,clean_data_path
+from configs.config import gui_height,gui_width,table_columns,clean_data_path,reload_data_path
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import pandas as pd
@@ -8,7 +8,7 @@ import csv
 import numpy as np
 
 path = clean_data_path
-tmp_data = pd.read_csv('../data/clean_data.csv')
+tmp_data = pd.read_csv(path)
 
 
 def show(frame22,combo_plot1,combo_plot2):
@@ -32,13 +32,10 @@ def show(frame22,combo_plot1,combo_plot2):
 
 
 
-
 def download(frame3):
     scrollbarx = Scrollbar(frame3, orient=HORIZONTAL)
     scrollbary = Scrollbar(frame3, orient=VERTICAL)
-    columns = (
-    "title", "authors", "average_rating", 'language_code', 'num_pages', 'ratings_count','text_reviews_count', 'publication_date',
-    'publisher', 'pub_year', 'century')
+    columns = table_columns
     tree = ttk.Treeview(frame3, columns=columns, selectmode="extended",height = 15)
     scrollbary.config(command=tree.yview)
     scrollbary.pack(side = RIGHT, fill=Y)
@@ -85,7 +82,7 @@ def reload(frame3,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9):
         reader = csv.reader(f, delimiter=',', quotechar='|')
         reader = list(reader)
 
-    with open('../data/reload.csv', 'w') as csvfile:
+    with open(reload_data_path, 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',')
         if not newcsv:
             newcsv.append(reader[0])
@@ -97,7 +94,7 @@ def reload(frame3,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9):
                 newcsv.append(str)
                 spamwriter.writerow(str)
     global tmp_data
-    tmp_data = pd.read_csv('../data/reload.csv')
+    tmp_data = pd.read_csv(reload_data_path)
 
 def download_main(frame3):
     for widgets in frame3.winfo_children():
@@ -111,7 +108,7 @@ def update_table(frame3,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9):
         widgets.destroy()
     global path
     reload(frame3,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9)
-    path = '../data/reload.csv'
+    path = reload_data_path
     download(frame3)
 
 
